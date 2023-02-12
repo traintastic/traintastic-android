@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Traintastic</string>
+    <string name="action_settings">Settings</string>
+    <string name="select_server">Select server</string>
+    <string name="add_server">Add server</string>
+    <string name="hostname">Hostname</string>
+    <string name="port">Port</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="ip_address">IP address</string>
+    <string name="name">Name</string>
+    <string name="name_cant_be_empty">Name can\'t be empty</string>
+    <string name="invalid_ip_address">Invalid IP address</string>
+    <string name="invalid_port_number_valid_range_x_x">Invalid port number, valid range is %1$d ... %2$d</string>
+</resources>
