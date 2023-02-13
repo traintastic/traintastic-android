@@ -16,4 +16,5 @@
     <string name="name_cant_be_empty">Name can\'t be empty</string>
     <string name="invalid_ip_address">Invalid IP address</string>
     <string name="invalid_port_number_valid_range_x_x">Invalid port number, valid range is %1$d ... %2$d</string>
+    <string name="deleted_x">Deleted %1$s</string>
 </resources>

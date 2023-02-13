@@ -29,6 +29,15 @@ class ServersDataSource(resources: Resources) {
         }
     }
 
+    fun removeServer(index: Int) {
+        val currentList = serversLiveData.value
+        if (currentList != null) {
+            val updatedList = currentList.toMutableList()
+            updatedList.removeAt(index)
+            serversLiveData.postValue(updatedList)
+        }
+    }
+
     fun hasServer(ip: InetAddress, port: Int): Boolean {
         serversLiveData.value?.let { servers ->
             return servers.any{ it.ip == ip && it.port == port }
@@ -39,6 +48,15 @@ class ServersDataSource(resources: Resources) {
     fun getServer(ip: InetAddress, port: Int): Server? {
         serversLiveData.value?.let { servers ->
             return servers.firstOrNull{ it.ip == ip && it.port == port }
+        }
+        return null
+    }
+
+    fun getServer(index: Int): Server? {
+        serversLiveData.value?.let { servers ->
+            if (index < servers.size) {
+                return servers[index]
+            }
         }
         return null
     }
