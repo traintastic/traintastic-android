@@ -16,7 +16,7 @@ jobs:
     - uses: sparkfabrik/android-build-action@v1.3.4
       with:
         project-path: .
-        output-path: traintastic-${{env.CI_REF_NAME_SLUG}}-${{env.GITHUB_RUN_NUMBER}}-${{env.CI_SHA_SHORT}}.apk
+        output-path: traintastic-${{github.ref_name}}-${{github.run_number}}-${{env.CI_SHA_SHORT}}.apk
         ruby-version: "2.7.5"
         bundler-version: "2.3.26"
 
@@ -25,3 +25,29 @@ jobs:
       with:
         name: traintastic-apk
         path: ${{github.workspace}}/*.apk
+
+  deploy:
+    name: Deploy to website
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    needs: [build-apk]
+
+    steps:
+    - uses: FranzDiebold/github-env-vars-action@v2
+
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: traintastic-apk
+        path: ${{github.workspace}}/dist/${{env.CI_REF_NAME_SLUG}}/${{github.run_number}}
+
+    - uses: easingthemes/ssh-deploy@v2.2.11
+      env:
+          SSH_PRIVATE_KEY: ${{secrets.SERVER_SSH_KEY}}
+          ARGS: "-rltgoDzvO"
+          SOURCE: "dist/*"
+          REMOTE_HOST: ${{secrets.REMOTE_HOST}}
+          REMOTE_PORT: ${{secrets.REMOTE_PORT}}
+          REMOTE_USER: ${{secrets.REMOTE_USER}}
+          TARGET: ${{secrets.REMOTE_TARGET}}/traintastic-android/
+  
