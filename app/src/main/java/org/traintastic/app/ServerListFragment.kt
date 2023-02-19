@@ -1,5 +1,6 @@
 package org.traintastic.app
 
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.traintastic.app.databinding.ServerListBinding
+import org.traintastic.app.network.Connection
+import java.net.Socket
+import java.util.concurrent.Executors
 import kotlin.math.roundToInt
 
 
@@ -151,8 +155,29 @@ class ServerListFragment : Fragment() {
     }
 
     private fun adapterOnClick(server: Server) {
-        //val intent = Intent(this, FlowerDetailActivity()::class.java)
-        //intent.putExtra(FLOWER_ID, flower.id)
-        //startActivity(intent)
+
+        Executors.newSingleThreadExecutor().execute {
+            try {
+                val socket = Socket(server.ip, server.port)
+
+                activity?.runOnUiThread {
+                    Connection.onConnected = {
+                        Connection.onConnected = null
+                        startActivity(Intent(requireContext(), MainActivity()::class.java))
+                    }
+                    Connection.enable(socket)
+                }
+            } catch (e: Exception) {
+                activity?.runOnUiThread {
+                    view?.let {
+                        Snackbar.make(
+                            it,
+                            resources.getString(R.string.failed_x, e.message),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 }

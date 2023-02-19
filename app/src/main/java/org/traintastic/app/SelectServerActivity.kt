@@ -8,12 +8,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import org.traintastic.app.databinding.ActivityMainBinding
+import org.traintastic.app.network.Message
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -120,14 +120,9 @@ class SelectServerActivity : AppCompatActivity() {
                 val msg = Message.fromByteArray(packet.data.sliceArray(IntRange(0, packet.length - 1)))
                 if (msg.getCommand() == Message.Command.Discover && msg.getType() == Message.Type.Response) {
                     val serverName = msg.readString()
-                    val versionMajor = msg.readUInt16()
-                    val versionMinor = msg.readUInt16()
-                    val versionPatch = msg.readUInt16()
-
-                    //Log.d("udp_receive", "serverName = " + serverName)
-                    //Log.d("udp_receive", "versionMajor = " + versionMajor)
-                    //Log.d("udp_receive", "versionMinor = " + versionMinor)
-                    //Log.d("udp_receive", "versionPatch = " + versionPatch)
+                    val versionMajor = msg.readUInt16().toUInt()
+                    val versionMinor = msg.readUInt16().toUInt()
+                    val versionPatch = msg.readUInt16().toUInt()
 
                     val servers = ServersDataSource.getDataSource(applicationContext.resources)
                     if (!servers.hasServer(packet.address, packet.port)) {
@@ -144,9 +139,6 @@ class SelectServerActivity : AppCompatActivity() {
                         )
                     }
                 }
-
-                //Log.d("udp_receive", packet.data.toString())
-                //Log.d("udp_receive", packet.length.toString())
             }
         } catch (e: Exception) {
             Log.d("udp_receive", "Exception: " + e.toString())
