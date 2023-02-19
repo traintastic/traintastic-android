@@ -16,7 +16,7 @@ jobs:
     - uses: sparkfabrik/android-build-action@v1.3.4
       with:
         project-path: .
-        output-path: traintastic-$CI_REF_NAME_SLUG-$GITHUB_RUN_NUMBER-$CI_SHA_SHORT.apk
+        output-path: traintastic-${{env.CI_REF_NAME_SLUG}}-${{env.GITHUB_RUN_NUMBER}}-${{env.CI_SHA_SHORT}}.apk
         ruby-version: "2.7.5"
         bundler-version: "2.3.26"
 
