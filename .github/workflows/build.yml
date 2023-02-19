@@ -1,0 +1,21 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build-apk:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: FranzDiebold/github-env-vars-action@v2
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: sparkfabrik/android-build-action@v1.3.4
+      with:
+        project-path: .
+        output-path: traintastic-$CI_REF_NAME_SLUG-$GITHUB_RUN_NUMBER-$CI_SHA_SHORT.apk
+        ruby-version: "2.7.5"
+        bundler-version: "2.3.26"
