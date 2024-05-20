@@ -165,8 +165,7 @@ object Connection {
                         val enumOrSetName = if (valueType == ValueType.Enum || valueType == ValueType.Set) message.readString() else ""
 
                         if (type == InterfaceItemType.VectorProperty) {
-                            //val length = message.readInt32() // read UInt as Int, Kotlin uses Int for length
-                            assert(false) // TODO: implement VectorProperty
+                            item = VectorProperty(obj, name, valueType, flags, readValues(message, valueType), enumOrSetName)
                         } else {
                             assert(type == InterfaceItemType.Property || type == InterfaceItemType.UnitProperty)
 
@@ -276,6 +275,23 @@ object Connection {
             else -> {
                 assert(false)
                 false
+            }
+        }
+    }
+
+    private fun readValues(message: Message, valueType: ValueType): Array<Any> {
+        val length = message.readInt32() // read UInt as Int, Kotlin uses Int for length
+        return when (valueType) {
+            ValueType.Boolean -> Array(length) { i -> message.readBool() }
+            ValueType.Enum,
+            ValueType.Integer,
+            ValueType.Set -> Array(length) { i -> message.readInt64() }
+            ValueType.Float -> Array(length) { i -> message.readDouble() }
+            ValueType.String,
+            ValueType.Object -> Array(length) { i -> message.readString() }
+            else -> {
+                assert(false)
+                emptyArray<Any>()
             }
         }
     }
