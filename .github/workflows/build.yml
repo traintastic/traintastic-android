@@ -13,7 +13,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: sparkfabrik/android-build-action@v1.3.4
+    - uses: sparkfabrik/android-build-action@v1.5.0
       with:
         project-path: .
         output-path: traintastic-${{github.ref_name}}-${{github.run_number}}-${{env.CI_SHA_SHORT}}.apk
